@@ -3,11 +3,11 @@
 }
 
 :root {
-	--c-action-primary: #4e1ffa;
+	--c-action-primary: #261ffa;
 	--c-action-primary-accent: #e9e5ff;
 	--c-action-secondary: #e5e5e5;
 	--c-text-primary: #0d0f21; 
-	--c-text-secondary: #6a6b76;
+	--c-text-secondary: #4d4d56;
 	--c-background-primary: #688095;
 }
 
@@ -161,7 +161,7 @@ input, button, select, textarea {
 #start-btn{
 	width: 100%;
 	padding: 0.3rem;
-	background : #6d8ed1;
+	background : #4775ff;
 	font-weight: 600;
 	letter-spacing: 0.13rem;
 	color: rgb(255, 255, 255);
@@ -172,7 +172,7 @@ input, button, select, textarea {
 }
 
 #start-btn:disabled{
-	background : #5f7ebb;
+	background : #738ee0;
 	cursor: auto;
 }
 
@@ -188,7 +188,7 @@ input, button, select, textarea {
 }
 
 .modal-options span{
-  width: 35%;
+  width: 25%;
 }
 
 .modal-options{
@@ -315,6 +315,14 @@ canvas{
 	}
   }
 
+@media (max-width: 700px) {
+	
+	.modal-options span{
+		width: 30%;
+  	}
+	
+  }  
+
 @media (max-width: 600px) {
 
 	.modal-options span{
@@ -325,14 +333,25 @@ canvas{
 		height: 2.5rem;
 		width: 90%;
 	}
-
-
   }
 
   @media (max-width: 500px) {
 	
 	.modal{
 		margin: 0;
+		width: 100%;
+	}
+
+  }
+
+  @media (max-width: 500px) {
+	
+	.modal-options span{
+		width: 100%;
+		margin-top: 0.7rem;
+  	}
+
+	.option button{
 		width: 100%;
 	}
 

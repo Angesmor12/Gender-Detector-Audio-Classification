@@ -12,13 +12,17 @@ let sampleRateLength = 24000
 let fftSize = 726
 let loadPath = ""
 let session = ""
+let attempt = 1
 
+// Algorithm selection
 document.querySelector(".algorithm-input").addEventListener("change", (e)=>{
   path = e.target.value
   targetSampleRate = parseInt(e.target.selectedOptions[0].dataset.sample_rate)
   sampleRateLength = parseInt(e.target.selectedOptions[0].dataset.sample_rate_length)
   fftSize = parseInt(e.target.selectedOptions[0].dataset.fft_size)
 })
+
+// Predict function
 
 async function predict(inputFeatures,path, key) {
 
@@ -79,6 +83,8 @@ uploadArea.addEventListener('click', () => {
   });
 });
 
+// Softmax function
+
 function softmax(logits) {
   const maxLogit = Math.max(...logits); 
   const expLogits = logits.map(logit => Math.exp(logit - maxLogit));
@@ -109,6 +115,8 @@ async function playAudio(waveform, sampleRate) {
   });
 }
 
+// Convert stereo in mono
+
 function convertStereoToMono(audioBuffer) {
   const channel1 = audioBuffer.getChannelData(0); 
   const channel2 = audioBuffer.getChannelData(1); 
@@ -117,7 +125,6 @@ function convertStereoToMono(audioBuffer) {
   for (let i = 0; i < channel1.length; i++) {
     monoWaveform[i] = (channel1[i] + channel2[i]) / 2; 
   }
-
   return monoWaveform;
 }
 
@@ -201,6 +208,8 @@ async function processAudio(file, normalization, draw) {
   showPrediction(prediction)
 }
 
+// Normalize waveforms
+
 function normalizeWaveform(waveform) {
   const max = Math.max(...waveform);
   const min = Math.min(...waveform);
@@ -212,6 +221,8 @@ function normalizeWaveform(waveform) {
 
   return waveform;
 }
+
+// Show prediction
 
 function showPrediction(value){
 
@@ -225,9 +236,11 @@ function showPrediction(value){
   else {
       predictionText.innerHTML = "Female"
   }
-}
 
-let attempt = 1
+  startButton.disabled = false;
+
+  attempt = 1
+}
 
 const modalBody = document.querySelector(".md")
 const modalBody2 = document.querySelector(".md2")
@@ -257,10 +270,12 @@ document.querySelector(".option-b2 button").addEventListener("click", async ()=>
 
 const startButton = document.getElementById('start-btn');
 const audioPlayer = document.getElementById('audio-player');
-let setupRecorderSesion = false;
 
+let setupRecorderSesion = false;
 let mediaRecorder;
 let audioChunks = []; 
+
+// Configure microphone
 
 async function setupRecorder() {
   try {
@@ -277,25 +292,24 @@ async function setupRecorder() {
       const audioURL = URL.createObjectURL(audioBlob);
       audioPlayer.src = audioURL;
       audioChunks = [];
-
       processAudio(audioBlob, false, true);
 
     };
 
-    startButton.disabled = false;
-
     return true
   } catch (error) {
-    startButton.disabled = true;
-    alert('The microphone could not be accessed.');
+    startButton.disabled = false;
+    window.alert('The microphone could not be accessed.');
     return false
   }
 }
 
 // Start recording
-startButton.addEventListener('click', () => {
-  if (mediaRecorder) {
 
+startButton.addEventListener('click', () => {
+  if (mediaRecorder && attempt == 1) {
+
+    attempt = 0
     recordingText.classList.remove("hidden")
     predictionContainer.classList.add("invisible")
 
@@ -305,14 +319,13 @@ startButton.addEventListener('click', () => {
 
     setTimeout(() => {
       mediaRecorder.stop();
-      startButton.disabled = false;
       recordingText.classList.add("hidden")
     }, 3500); 
 
   }
 });
 
-// Generate spectrogram-Mel
+// Generate Spectrogram-Mel
 
 function generateMelSpectrogram(waveform, sampleRate, canvas, fftSize, draw) {
 
@@ -407,6 +420,8 @@ function melToHz(mel) {
   return 700 * (Math.pow(10, mel / 2595) - 1);
 }
 
+// Show Spectrogram-Mel
+
 function drawSpectrogram(spectrogram, canvas) {
   
   const ctx = canvas.getContext('2d');
@@ -429,6 +444,5 @@ function drawSpectrogram(spectrogram, canvas) {
       imageData.data[index + 3] = 255; 
     }
   }
-
   ctx.putImageData(imageData, 0, 0);
 }
