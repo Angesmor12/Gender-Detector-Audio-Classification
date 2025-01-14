@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gender Detector</title>
+    <link rel="stylesheet" href="./styles/index.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" />
+    <meta name="keywords" content="gender classification, voice classification, AI, machine learning, audio recognition, gender detection, gender identification, deep learning, audio processing, gender recognition, sound analysis, binary classification, neural networks, gender prediction, voice recognition, gender classifier, audio-based gender detection, artificial intelligence, acoustic recognition" />
+    <meta name='author' content='Angelo Smorlesi' />
+    <meta name="description" content="A machine learning project that classifies voice recordings to predict the gender of a person based on acoustic features, using AI and deep learning techniques." />
+    <meta name='copyright' content='Angelo Smorlesi' />
+    <meta name='robots' content='index,follow,translate' />
+    <link rel="icon" href="./images/gen.ico" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/onnxruntime-web.min.js"></script>
+
+</head>
+<body>
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div class="modal-options">
+        <span class="option option-b1">
+          <button>Upload audio</button>
+        </span>
+        <span class="option option-b2">
+          <button>Use microphone</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <h2 class="modal-title">Gender Detector</h2>
+      <p class="modal-description">This project utilizes an AI model trained on a diverse dataset of human voice recordings to accurately classify gender. Using advanced audio processing techniques, such as spectrogram analysis and deep learning architectures.</p>
+       
+      <p class="algorithm-label">Select Model</p>
+
+      <select style="width: 100%;" class="algorithm-input">
+        
+        <option value="./models/model_8_cnn.onnx" data-sample_rate="8000" data-sample_rate_length="24000" data-fft_size="726" selected>Model CNN 8</option>
+        <option value="./models/model_deNoised_16_cnn.onnx" data-sample_rate="16000" data-sample_rate_length="48000" data-fft_size="1450">Model CNN deNoised 16</option>
+
+        <option value="https://golden-puppy-cbcd28.netlify.app/model_r18_p_8.onnx" data-sample_rate="8000" data-sample_rate_length="24000" data-fft_size="726">ResNet18 Pretrained 8</option>
+        <option value="https://golden-puppy-cbcd28.netlify.app/model_r18_p_deNoised_8.onnx" data-sample_rate="8000" data-sample_rate_length="24000" data-fft_size="726">ResNet18 Pretrained deNoised 8</option>
+  
+      </select>
+    
+    </div>
+
+    <div class="modal-body md">
+      <button class="upload-area">
+        <span class="upload-area-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="340.531" height="419.116" viewBox="0 0 340.531 419.116">
+    <g id="files-new" clip-path="url(#clip-files-new)">
+      <path id="Union_2" data-name="Union 2" d="M-2904.708-8.885A39.292,39.292,0,0,1-2944-48.177V-388.708A39.292,39.292,0,0,1-2904.708-428h209.558a13.1,13.1,0,0,1,9.3,3.8l78.584,78.584a13.1,13.1,0,0,1,3.8,9.3V-48.177a39.292,39.292,0,0,1-39.292,39.292Zm-13.1-379.823V-48.177a13.1,13.1,0,0,0,13.1,13.1h261.947a13.1,13.1,0,0,0,13.1-13.1V-323.221h-52.39a26.2,26.2,0,0,1-26.194-26.195v-52.39h-196.46A13.1,13.1,0,0,0-2917.805-388.708Zm146.5,241.621a14.269,14.269,0,0,1-7.883-12.758v-19.113h-68.841c-7.869,0-7.87-47.619,0-47.619h68.842v-18.8a14.271,14.271,0,0,1,7.882-12.758,14.239,14.239,0,0,1,14.925,1.354l57.019,42.764c.242.185.328.485.555.671a13.9,13.9,0,0,1,2.751,3.292,14.57,14.57,0,0,1,.984,1.454,14.114,14.114,0,0,1,1.411,5.987,14.006,14.006,0,0,1-1.411,5.973,14.653,14.653,0,0,1-.984,1.468,13.9,13.9,0,0,1-2.751,3.293c-.228.2-.313.485-.555.671l-57.019,42.764a14.26,14.26,0,0,1-8.558,2.847A14.326,14.326,0,0,1-2771.3-147.087Z" transform="translate(2944 428)" fill="var(--c-action-primary)"/>
+    </g>
+  </svg>
+        </span>
+        <span class="upload-area-title">Drag file(s) here to upload.</span>
+        <span class="upload-area-description">
+          Alternatively, you can select a file by <br/><strong>clicking here</strong>
+        </span>
+      </button>
+    </div>
+
+    <div class="modal-body md2 hidden">
+  
+      <div class="audio-player-container"><audio id="audio-player" controls></audio></div>
+      <div class="canvas-container hidden"><canvas id="spectrogramCanvas" ></canvas></div>
+
+      <button id="start-btn">Start Recording</button>
+    </div>
+
+    <div class="hidden loading-image-container"><img class="loading-image" src="./images/loading.gif" alt="loading"></div>
+    <div class="hidden recording-text-container"><p>Recording ...</p></div>
+    <div class="prediction-container invisible"><p class="prediction-text">Prediction : <p class="prediction-value"></p></p></div>
+
+    <div class="modal-footer">
+        <p>@Angelo Smorlesi</p>
+    </div>
+
+
+  </div>
+      <script type="module" src="index.js"></script>
+</body>
+</html>
