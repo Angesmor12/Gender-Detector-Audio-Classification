@@ -8,4 +8,4 @@ You can find the audios that were used for training here : https://drive.google.
 
 Google colab : https://colab.research.google.com/drive/1VKR5ShB5-1tb08NVJrFEfHqdqnG2l6HI?usp=sharing
 
-You can test the Predictor directly in your browser : 
+You can test the Predictor directly in your browser : https://gender-detector-audio.vercel.app/
