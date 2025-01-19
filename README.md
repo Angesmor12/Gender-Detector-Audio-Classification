@@ -1,4 +1,4 @@
-# Gender-Detector-Audio-Classification ( Audios Classification )
+# Gender-Detector-Audio-Classification (Audios Classification)
 
 Artificial Intelligence Project Focused on Audio Classification Models
 
